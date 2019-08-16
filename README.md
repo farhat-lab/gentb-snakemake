@@ -1,19 +1,3 @@
-##Project title 
+## Snakemake prototype
 
-GenTB - a user friendly automated pipeline for analysis and resistance prediction of raw *Mycobacterium tuberculosis* sequence reads
-
-##Motivation
-
-
-##Framework used
-
-##Features 
-
-##Installation
-
-##How to use?
-
-##Contribute
-
-##Credits 
-
+This is a prototype repository for experimenting with snakemake to analyze raw sequence data of *M. tuberculosis*.
