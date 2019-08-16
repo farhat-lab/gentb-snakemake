@@ -1,0 +1,6 @@
+Failed to process file ERR2677470_R1.fastq.gz
+uk.ac.babraham.FastQC.Sequence.SequenceFormatException: Ran out of data in the middle of a fastq entry.  Your file is probably truncated
+	at uk.ac.babraham.FastQC.Sequence.FastQFile.readNext(FastQFile.java:179)
+	at uk.ac.babraham.FastQC.Sequence.FastQFile.next(FastQFile.java:125)
+	at uk.ac.babraham.FastQC.Analysis.AnalysisRunner.run(AnalysisRunner.java:76)
+	at java.base/java.lang.Thread.run(Thread.java:834)
