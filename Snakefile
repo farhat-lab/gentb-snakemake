@@ -1,44 +1,123 @@
-#configfile: "config.yaml"
+configfile: "config.yaml"
+reference=config["reference"]
+
 (SAMPLES,) = glob_wildcards("data/fastq/{sample}_R1.fastq.gz")
-
-#reference = "test-data/reference/NC_000962.3_Mycobacterium tuberculosis_H37Rv.fa"
-
-#or 
-#wildcards = glob_wildcards("fastq/{sample}_R1.fastq.gz")
-#then use {wildcards.sample}
-
 
 rule all:
     input:
-        expand("results/{sample}.quality-control.html", sample=SAMPLES)
+        expand("results/{sample}_R1_trimmed.fastq", sample=SAMPLES),
+        expand("results/{sample}_aln.sam", sample=SAMPLES),
+        expand("results/{sample}.namesorted.bam", sample=SAMPLES),
+        expand("results/{sample}.fixmate.bam", sample=SAMPLES),
+        expand("results/{sample}.positionsort.bam", sample=SAMPLES),
+        expand("results/{sample}.rmdup.bam", sample=SAMPLES),
+        expand("results/{sample}.rmdup.bam.bai", sample=SAMPLES),
+        expand("results/{sample}.vcf", sample=SAMPLES)
 
-rule fastqc:
-    input: 
-        fwd="data/fastq/{sample}_R1.fastq.gz", rev="data/fastq/{sample}_R2.fastq.gz"    
+rule fastp:
+    input:
+        sample=["data/fastq/{sample}_R1.fastq.gz", "data/fastq/{sample}_R2.fastq.gz"]
     output:
-        html="results/{sample}.quality-control.html",
-        zip="results/{sample}_quality-control_fastqc.zip" # in case we want to use multiqc later as it requires this suffix
+        trimmed=["results/{sample}_R1_trimmed.fastq", "results/{sample}_R2_trimmed.fastq"],
+        html="results/{sample}.fastp.html",
+        json="results/{sample}.fastp.json"
     log:
-        "logs/fastqc/{sample}.log"
-    message: 
-        "validating FASTQ files"
+        "logs/fastp/{sample}.log"
+    params:
+        extra=""
+    threads: 2
     wrapper:
-        "0.36.0/bio/fastqc"
+        "0.36.0/bio/fastp"
 
+#cite 10.1093/bioinformatics/bty560
 
-# rule fastptrim:
+#insert here Kraken2 Classify
+
+rule minimap2:
+    input:
+        fwd="results/{sample}_R1_trimmed.fastq", rev="results/{sample}_R2_trimmed.fastq"
+    output: 
+        temp("results/{sample}_aln.sam")
+    threads: 3
+    log:
+        "logs/minimap2/{sample}.log"
+    shell:
+        "minimap2 -ax sr {reference} {input.fwd} {input.rev} > {output}"
+
+#cite 10.1093/bioinformatics/bty191
+
+# use alternatively the minimap2 wrapper as below
+# rule minimap2:
 #     input:
-#         fwd="test-data/{sample}_R1.fastq.gz", rev="test-data/{sample}_R2.fastq.gz"
+#         target, 
+#         query=["data/results/{sample}_R1_trimmed.fastq", "data/results/{sample}_R2_trimmed.fastq"]
 #     output:
-#         fwd="results/{sample}_R1_trimmed.fastq", rev="results/{sample}_R2_trimmed.fastq "
-#         htmlout="results/{sample}_fastp.html", jsonout="results/{sample}_fastp.json"
-#     message: 
-#         "* trimming reads (fastp)"
-#     shell: 
-#         "fastp -i {input.fwd} -I {input.rev} -o {output.fwd} -O {output.rev} --html={output.htmlout} --json={output.jsonout}"
+#         "results/{sample}_aln.sam"
+#     log:
+#         "logs/minimap2/{sample}.log"
+#     params:
+#         extra="-ax sr"
+#     threads: 3
+#     wrapper:
+#         "0.36.0/bio/minimap2/aligner"
+
+rule samtools_sort:
+    input: 
+        "results/{sample}_aln.sam"
+    output: 
+        "results/{sample}.namesorted.bam"
+    shell: 
+        "samtools sort --threads 8 -n -m 4G -o {output} {input}"
+
+rule samtools_fixmate:
+    input: 
+        "results/{sample}.namesorted.bam"
+    output:
+        "results/{sample}.fixmate.bam"
+    shell:
+        "samtools fixmate -m {input} {output}"
+
+rule samtools_positionsort:
+    input:
+        "results/{sample}.fixmate.bam"
+    output:
+        "results/{sample}.positionsort.bam"
+    shell:
+        "samtools sort -o {output} {input}"
+
+rule samtools_rmdup:
+    input: 
+        "results/{sample}.positionsort.bam"
+    output:
+        "results/{sample}.rmdup.bam"
+    shell:
+        "samtools markdup --threads 4 -r -s {input} {output}"
+
+#insert here "check depth" using the python script checkd.py
+
+rule samtools_index:
+    input:
+        "results/{sample}.rmdup.bam"
+    output:
+        "results/{sample}.rmdup.bam.bai"
+    shell:
+        "samtools index {input} {output}"
 
 
-# #Kraken2 Classify
-# module load gcc/6.2.0 module load python/3.6.0 kraken2_wrapper.sh 
-# ${file}_trimmed_1.fastq ${file}_trimmed_2.fastq @{file}_kraken2_classified.txt 
-# @{file}_kraken2_report.txt
+#cite 10.1093/bioinformatics/btp352
+
+rule pilon:
+    input: 
+        "results/{sample}.rmdup.bam"
+    output: 
+        "results/{sample}.vcf"
+    shell:
+        "java -Xmx12G -jar pilon --genome {reference} --bam {input} --output {output} --vcf"
+
+#cite 10.1371/journal.pone.0112963
+
+#check here on how Pilon is called: /Users/matthias/miniconda3/envs/snakemake-gentb/bin/pilon. Specify the amount of RAM is used.
+#see lucas megapipe for it
+
+
+
