@@ -467,13 +467,14 @@ sub check_synonymous{
  my $codon = shift @_;
  my $aapos = shift @_;
  my $altcodon = shift @_;
- my $aaref; my $aavar; 
+ my $aaref; my $aavar = ''; 
  foreach my $codnmbr (1..length($codon)/3) {
   my @bases=split //, $codon;
   my @altbases=split //,$altcodon;
-  #print STDERR (@bases)[($codnmbr-1)*3..(($codnmbr-1)*3+2)];
   $aaref.=$tt11{join('',(@bases)[($codnmbr-1)*3..(($codnmbr-1)*3+2)])};
-  $aavar.=$tt11{join('',(@altbases)[($codnmbr-1)*3..(($codnmbr-1)*3+2)])};
+  my $codonvar = join('',(@altbases)[($codnmbr-1)*3..(($codnmbr-1)*3+2)]);
+
+  $aavar.=$tt11{$codonvar};
  }
  if ($aaref eq $aavar) {
   return ('S', $aaref, $aavar); #synonymous

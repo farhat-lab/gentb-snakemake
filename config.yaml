@@ -1,1 +1,4 @@
 reference: "data/reference/TBRefGen.fasta"
+lineage: "data/coll-lineage/coll.tsv"
+genomesummary: "data/reference/h37rv_genome_summary.txt"
+noncodingsummary: "data/reference/h37rv_noncoding_summary.txt"
