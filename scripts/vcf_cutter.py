@@ -1,4 +1,4 @@
-#!/bin/env python3
+#!/usr/bin/env python3
 """
 A simple script to strip out non-useful references from vcf files to 'clean' them.
 """
@@ -43,9 +43,9 @@ def main():
     parser.add_argument('--input', '-i', help='Filename of the input vcf file', type=file_type)
     parser.add_argument('--output', '-o', help='File of the output vcf file')
     args = parser.parse_args()
-    with open(args.input, 'rb') as fhl:
-        with open(args.output, 'wb') as fhl:
-            vcf_cutter(args.input, fhl)
+    with open(args.input, 'rb') as inp:
+        with open(args.output, 'wb') as out:
+            vcf_cutter(inp, out)
 
 if __name__ == '__main__':
     main()
