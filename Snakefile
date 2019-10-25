@@ -17,6 +17,7 @@ rule all:
         expand("results/fake_file.{sample}.rmdup.bam", sample=SAMPLES),
         expand("results/{sample}.rmdup.bam.bai", sample=SAMPLES),
         expand("results/{sample}.vcf", sample=SAMPLES),
+        expand("results/{sample}.cut.vcf", sample=SAMPLES),
         expand("results/{sample}.lineage.txt", sample=SAMPLES),
         expand("results/{sample}.var", sample=SAMPLES)
 
@@ -129,6 +130,14 @@ rule pilon:
     shell:
         "java -Xmx12G -jar {params.jar_path}/pilon-1.23.jar --genome {reference} "
         "--bam {input} --output {params.output} --vcf"
+
+rule cut_vcf:
+    input:
+        "results/{sample}.vcf"
+    output:
+        "results/{sample}.cut.vcf"
+    shell:
+        "python3 ./scripts/vcf_cutter.py -i {input} -o {output}"
     
 #cite 10.1371/journal.pone.0112963
 
@@ -142,7 +151,7 @@ rule call_lineage:
 
 rule annotator:
     input:
-        "results/{sample}.vcf"
+        "results/{sample}.cut.vcf"
     output:
         "results/{sample}.var"
     shell:
