@@ -28,7 +28,7 @@ def vcf_cutter(inp, output):
         data = line.rstrip(b'\n').split(b'\t')
 
         # if column_ref and column_alt aren't set then this will fail
-        if len(data[column_ref]) != 1 or data[column_alt] != '.':
+        if len(data[column_ref]) != 1 or data[column_alt] != b'.':
             output.write(line)
 
 def file_type(fname):
