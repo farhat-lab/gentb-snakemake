@@ -24,7 +24,7 @@ def main():
 
     with open(args.mutations, 'r') as fhl:
         variants = list(set(fhl.read().rstrip().split(",")))
-    generate_matrix(variants, args.strian)
+    generate_matrix(variants, args.strain)
 
 def generate_matrix(variants, filename):
     """Generate the matrix"""
@@ -38,9 +38,12 @@ def generate_matrix(variants, filename):
 
     for line in open(filename):
         items = line.rstrip().split("\t") #variant name i.e. snpname
-        snpname = items[3]
+        snpname = items[6]
         if snpname != "varname":
             parts = snpname.split('_')
+            if len(parts) <= 1: 
+                print(parts)
+                continue 
             if snpname in variants:
                 out[snpname] = "1"
             elif parts[1] in ['CN', 'CS', 'CZ']:
