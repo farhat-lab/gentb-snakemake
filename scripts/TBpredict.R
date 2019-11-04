@@ -1,3 +1,5 @@
+#!/usr/bin/env Rscript
+
 ## Minimal prediction routine with all possible preprocessing
 ## Configured for calling by Rscript
 ## Call as:

@@ -3,6 +3,8 @@ reference=config["reference"]
 lineage=config["lineage"]
 genomesummary=config["genomesummary"]
 noncodingsummary=config["noncodingsummary"]
+variant_name_list=config["variant_name_list"]
+lineage_snp_mf=config["lineage_snp_mf"]
 
 (SAMPLES,) = glob_wildcards("data/fastq/{sample}_R1.fastq.gz")
 
@@ -19,7 +21,10 @@ rule all:
         expand("results/{sample}.vcf", sample=SAMPLES),
         expand("results/{sample}.cut.vcf", sample=SAMPLES),
         expand("results/{sample}.lineage.txt", sample=SAMPLES),
-        expand("results/{sample}.var", sample=SAMPLES)
+        expand("results/{sample}.var", sample=SAMPLES),
+        expand("results/{sample}.matrix.csv", sample=SAMPLES), 
+        expand("results/{sample}.matrix.json", sample=SAMPLES),
+        expand("results/{sample}.fake_file.matrix.json", sample=SAMPLES)
 
 rule fastp:
     input:
@@ -105,8 +110,6 @@ rule depthcheck:
         "samtools depth -a {input} | python3 ./scripts/checkd.py; "
         "touch {output}"
 
-# --keepgoing
-# -k
 
 rule samtools_index:
     input:
@@ -120,7 +123,8 @@ rule samtools_index:
 
 rule pilon:
     input: 
-        "results/{sample}.rmdup.bam"
+        bam="results/{sample}.rmdup.bam", bai="results/{sample}.rmdup.bam.bai"
+
     output: 
         "results/{sample}.vcf",
         temp("results/{sample}.fasta")
@@ -129,7 +133,7 @@ rule pilon:
         output=lambda wildcards, output: os.path.join(output[0].rsplit('/', 1)[0], wildcards[0])
     shell:
         "java -Xmx12G -jar {params.jar_path}/pilon-1.23.jar --genome {reference} "
-        "--bam {input} --output {params.output} --vcf"
+        "--bam {input.bam} --output {params.output} --vcf"
 
 rule cut_vcf:
     input:
@@ -156,3 +160,30 @@ rule annotator:
         "results/{sample}.var"
     shell:
         "perl ./scripts/flatAnnotatorVAR_2.0.pl {reference} {genomesummary} {noncodingsummary} {input} 10 0.4 PASS AMB > {output}"
+
+rule generate_matrix:
+    input:
+        "results/{sample}.var"
+    output:
+        "results/{sample}.matrix.csv"
+    shell:
+        "python3 ./scripts/generate_matrix.py {variant_name_list} {input} > {output}"
+
+rule TBpredict:
+    input:
+        "results/{sample}.matrix.csv"
+    output: 
+        "results/{sample}.matrix.json"
+    shell:
+        "Rscript ./scripts/TBpredict.R {input}"
+
+rule enhance:
+    input: 
+        matrix="results/{sample}.matrix.json", var="results/{sample}.var"
+    output: 
+        "results/{sample}.fake_file.matrix.json"
+    shell: 
+        "python3 ./scripts/varMatchUnk.py {input.var} {lineage_snp_mf} {input.matrix}; "
+        "touch {output}"
+
+
