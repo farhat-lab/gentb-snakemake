@@ -35,6 +35,7 @@ def generate_matrix(variants, filename):
     output2.write(",".join(variants))
     output2.write("\n")
     output2.write(filename.rsplit(".", 1)[0]) # strain name
+    output2.write(",")
 
     with open(filename, 'r') as fhl:
         input_csv = csv.reader(fhl, delimiter="\t")
