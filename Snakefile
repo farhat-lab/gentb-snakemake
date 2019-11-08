@@ -24,7 +24,7 @@ rule all:
         expand("results/{sample}.var", sample=SAMPLES),
         expand("results/{sample}.matrix.csv", sample=SAMPLES), 
         expand("results/{sample}.matrix.json", sample=SAMPLES),
-        expand("results/{sample}.fake_file.matrix.json", sample=SAMPLES)
+        expand("results/{sample}.final.matrix.json", sample=SAMPLES)
 
 rule fastp:
     input:
@@ -181,9 +181,8 @@ rule enhance:
     input: 
         matrix="results/{sample}.matrix.json", var="results/{sample}.var"
     output: 
-        "results/{sample}.fake_file.matrix.json"
+        "results/{sample}.final.matrix.json"
     shell: 
-        "python3 ./scripts/varMatchUnk.py {input.var} {lineage_snp_mf} {input.matrix}; "
-        "touch {output}"
+        "python3 ./scripts/varMatchUnk.py {input.var} {lineage_snp_mf} {input.matrix} -o {output}"
 
 
