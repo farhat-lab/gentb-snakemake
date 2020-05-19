@@ -1,0 +1,100 @@
+{
+    "__default__" :
+    {
+        "t" : "0-00:05:00",
+        "c" : 1,
+        "p" : "short",
+        "mem" : "4G"
+    },
+    "fastp":
+     {
+        "t" : "0-00:10:00",
+        "c" : 1,
+        "p" : "short",
+        "mem" : "6G"
+    },
+    "minimap2":
+    {
+        "mem" : "10G",
+        "t" : "0-00:20:00",
+        "p" : "short",
+        "c" : 1
+    },
+    "samtools_sort":
+    {
+        "mem" : "15G",
+        "t" : "0-00:13:00",
+        "p" : "short",
+        "c" : 1
+    },
+    "samtools_rmdup":
+    {
+        "mem" : "8G",
+        "t" : "0-00:10:00",
+        "p" : "short",
+        "c" : 1
+    },
+    "depthcheck":
+    {
+        "mem" : "1G",
+        "t" : "0-00:02:00",
+        "p" : "short",
+        "c" : 1
+    },
+     "samtools_index":
+    {
+        "mem" : "4G",
+        "t" : "0-00:05:00",
+        "p" : "short",
+        "c" : 1
+    },
+    "pilon":
+    {
+        "mem" : "15G",
+        "t" : "0-00:20:00",
+        "p" : "short",
+        "c" : 1
+    },
+    "cut_vcf":
+    {
+        "mem" : "2G",
+        "t" : "0-00:03:00",
+        "p" : "short",
+        "c" : 1
+    },
+     "call_lineage":
+    {
+        "mem" : "1G",
+        "t" : "0-00:02:00",
+        "p" : "short",
+        "c" : 1
+    },
+    "annotator":
+    {
+        "mem" : "6G",
+        "t" : "0-00:10:00",
+        "p" : "short",
+        "c" : 1
+    },
+    "generate_matrix":
+    {
+        "mem" : "2G",
+        "t" : "0-00:03:00",
+        "p" : "short",
+        "c" : 1
+    },
+   "TBpredict":
+    {
+        "mem" : "1G",
+        "t" : "0-00:03:00",
+        "p" : "short",
+        "c" : 1
+    },
+    "enhance":
+    {
+        "mem" : "1G",
+        "t" : "0-00:03:00",
+        "p" : "short",
+        "c" : 1
+    }
+}
