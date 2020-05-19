@@ -16,6 +16,15 @@ script.basename <- dirname(script.name)
 libs <- file.path(script.basename, '../data/Rlib')
 
 data_dir <- file.path(script.basename, '../data/predict_rdata')
+
+#local({r<-getOption("repos")
+#      r["CRAN"]<-"http://cran.fhcrc.org/"
+#      options(repos=r)})
+
+#install.packages("jsonlite", quiet=TRUE, lib=libs)
+#install.packages("randomForest", quiet=TRUE, lib=libs)
+
+
 #aa <- Sys.time()
 
 library(foreign)

@@ -33,6 +33,7 @@ def generate_matrix(variants, filename):
     output2 = sys.stdout
     output2.write('strain,')
     output2.write(",".join(variants))
+    output2.write(",") #one solution to add one comma here since the 'out' list will end with a comma 
     output2.write("\n")
     output2.write(filename.rsplit(".", 1)[0]) # strain name
     output2.write(",")
@@ -47,8 +48,10 @@ def generate_matrix(variants, filename):
             out.add(process_record(record[varname_index], "\t".join(variants)))
 
     for variant in variants:
-        output2.write(str(int(variant in out))+',')
+        output2.write(str(int(variant in out)) + ',')
     output2.write("\n")
+
+
 
 def process_record(snpname, variants):
     parts = snpname.split('_')
