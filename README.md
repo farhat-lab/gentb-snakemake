@@ -15,7 +15,7 @@ The pipeline uses well established programs to align reads to a reference strain
 
 2. Make sure you have the package manager [conda](https://docs.conda.io/en/latest/miniconda.html) installed to source all software and dependencies into a new environment:
 ```
-conda env create -f snakemake-gentb.yml
+conda env create -f envs/snakemake-gentb.yml
 conda activate snakemake-gentb
 ```
 
