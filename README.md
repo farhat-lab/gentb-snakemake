@@ -11,14 +11,15 @@ The pipeline uses well established programs to align reads to a reference strain
 
 ### Usage
 
-* Clone this Github repository to your local machine
+1. Clone this Github repository to your local machine
 
-* Make sure you have the package manager [conda](https://docs.conda.io/en/latest/miniconda.html) installed to source _Snakemake_:
+2. Make sure you have the package manager [conda](https://docs.conda.io/en/latest/miniconda.html) installed to source all software and dependencies into a new environment:
 ```
-conda install snakemake
+conda env create -f snakemake-gentb.yml
+conda activate snakemake-gentb
 ```
 
-* Download example fastq files:
+3. Download example fastq files:
 
 ```
 mkdir data/fastq; cd data/fastq
@@ -26,12 +27,12 @@ wget ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR187/009/ERR1873539/ERR1873539_1.fastq
 wget ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR187/009/ERR1873539/ERR1873539_2.fastq.gz
 ```
 
-* Start the analysis pipeline in _Snakemake_
+4. Start the analysis pipeline in _Snakemake_
 ```
 snakemake -s snakefile_test_run --use-conda
 ```
 
-* Start the analysis pipeline in _Snakemake_ on a SLURM cluster:
+5. Start the analysis pipeline in _Snakemake_ on a SLURM cluster:
 ```
 snakemake -s snakefile_test_run -j 100 --cluster-config cluster.json --cluster "sbatch --mem {cluster.mem} -t {cluster.t} -c {cluster.c} -p {cluster.p}"
 ```
