@@ -14,6 +14,10 @@ The pipeline uses well established programs to align reads to a reference strain
 
 1. Clone this Github repository to your local machine
 
+```
+git clone https://github.com/farhat-lab/gentb-snakemake.git
+```
+
 2. Make sure you have the package manager [conda](https://docs.conda.io/en/latest/miniconda.html) installed to source all software and dependencies into a new environment:
 ```
 conda env create -f envs/snakemake-gentb.yml
