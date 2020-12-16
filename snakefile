@@ -5,6 +5,7 @@ lineage=config["lineage"]
 genomesummary=config["genomesummary"]
 noncodingsummary=config["noncodingsummary"]
 variant_name_list=config["variant_name_list"]
+variant_name_list_pyrazinamide=config["variant_name_list_pyrazinamide"]
 lineage_snp_mf=config["lineage_snp_mf"]
 
 (SAMPLES,)=glob_wildcards("data/fastq/{sample}_1.fastq.gz")
@@ -122,6 +123,13 @@ rule generate_matrix:
     shell:
         "python3 scripts/generate_matrix.py {variant_name_list} {input} > {output}"
 
+rule generate_matrix_pyrazinamide:
+    input:
+        "results/{sample}.var"
+    output:
+        "results/{sample}.matrix.pyrazinamide.csv"
+    shell:
+        "python3 scripts/generate_matrix_pyrazinamide.py {variant_name_list_pyrazinamide} {input} < {output}"
 rule TBpredict:
     input:
         "results/{sample}.matrix.csv"
