@@ -13,9 +13,9 @@ script.name <- sub(prefix, "", options[grep(prefix, options)])
 script.basename <- dirname(script.name)
 
 # Set the location of the libs to relative to this script's location
-libs <- file.path(script.basename, '../data/Rlib')
+libs <- file.path(script.basename, 'data/Rlib')
 
-data_dir <- file.path(script.basename, '../data/predict_rdata')
+data_dir <- file.path(script.basename, 'data/predict_rdata')
 
 #local({r<-getOption("repos")
 #      r["CRAN"]<-"http://cran.fhcrc.org/"
