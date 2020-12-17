@@ -14,7 +14,7 @@ library(randomForest)
 predictfunction <- function(filename){
 set.seed(5414)
 #input the variant matrix
-strain <- read.csv('test_pyra_script.matrix', header=TRUE)
+strain <- read.csv(filename, header=TRUE)
 
 #prepare output for variants
 important_strain<-matrix(NA,nrow=5,ncol=1,dimnames=list(c(), 'pza'))
