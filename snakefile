@@ -21,8 +21,8 @@ rule all:
     input:
         expand("results/{sample}_aln.sam", sample = SAMPLES),
         expand("results/{sample}.rmdup.bam.bai", sample = SAMPLES),
-        expand("results/{sample}.final.matrix.json", sample=SAMPLES)
-
+        expand("results/{sample}.final.matrix.json", sample=SAMPLES),
+        expand("results/{sample}.matrix.pyrazinamide.json", sample=SAMPLES)
 
 rule fastp:
     input:
@@ -129,7 +129,8 @@ rule generate_matrix_pyrazinamide:
     output:
         "results/{sample}.matrix.pyrazinamide.csv"
     shell:
-        "python3 scripts/generate_matrix_pyrazinamide.py {variant_name_list_pyrazinamide} {input} < {output}"
+        "python3 scripts/generate_matrix_pyrazinamide.py {variant_name_list_pyrazinamide} {input} > {output}"
+
 rule TBpredict:
     input:
         "results/{sample}.matrix.csv"
@@ -138,6 +139,14 @@ rule TBpredict:
     shell:
         "Rscript scripts/TBpredict.R {input}"
 
+rule TBpredict_pyrazinamide:
+    input:
+        "results/{sample}.matrix.pyrazinamide.csv"
+    output: 
+        "results/{sample}.matrix.pyrazinamide.json"
+    shell:
+        "Rscript scripts/TBpredict_pyrazinamide.R {input}"
+      
 rule enhance:
     input: 
         matrix="results/{sample}.matrix.json", var="results/{sample}.var"
