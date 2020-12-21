@@ -25,7 +25,7 @@ names(important)<-strain[,1]
 result <- matrix(NA, nrow=1, ncol=3)
 
 #load RandomForest object
-load("../data/predict_rdata_pyrazinamide/pza_finalpredict.RData")
+load("data/predict_rdata_pyrazinamide/pza_finalpredict.RData")
 
 #perform prediction and write strain ID, drug, and probability to result
 Valid <- predict(drugg.full.rf, strain, type='prob', norm.votes=TRUE, predict.all=FALSE)
@@ -41,7 +41,6 @@ l <- list(result, important)
 
 ## Save JSON file
 file_noext <- substr(filename, 1, nchar(filename) - 4)
-return(file_noext)
 cat(toJSON(l, pretty = TRUE), "\n", file = paste0(file_noext, ".json"))
 }
 
