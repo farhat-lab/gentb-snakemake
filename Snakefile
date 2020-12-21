@@ -15,8 +15,6 @@ ruleorder: samtools_index > pilon > annotator > generate_matrix > TBpredict > en
 onstart:
     "Rscript scripts/initialise.R"
 
-print(SAMPLES)
-
 rule all:
     input:
         expand("results/{sample}.final.predict.json", sample=SAMPLES)
@@ -24,10 +22,10 @@ rule all:
 rule fastp:
     input:
         fwd="data/fastq/{sample}_1.fastq.gz", 
-        rev="data/fastq/{sample}_2.fastq.gz"
+        rev="data/fastq/{sample}_2.fastq.gz",
     output:
         fwd=temp("results/{sample}_1_trimmed.fastq.gz"), 
-        rev=temp("results/{sample}_2_trimmed.fastq.gz")
+        rev=temp("results/{sample}_2_trimmed.fastq.gz"),
     shell:
         "fastp -i {input.fwd} -I {input.rev} -o {output.fwd} -O {output.rev}"
 
@@ -154,9 +152,9 @@ rule enhance:
 
 rule merge_pyrazinamide_prediction:
     input:
-        all_predictions="results/{sample}.enhanced.matrix.json",
-        pza_prediction="results/{sample}.predict.pyrazinamide.json"
+        all_predictions="results/{sample}.enhanced.predict.json",
+        pza_prediction="results/{sample}.predict.pyrazinamide.json",
     output:
-        "{sample}.final.predict.json"
+        "results/{sample}.final.predict.json"
     shell:
         "python3 scripts/merge_retrained_pyrazinamide_prediction.py {input.all_predictions} {input.pza_prediction} {output}" 
