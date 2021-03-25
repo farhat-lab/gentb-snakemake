@@ -27,8 +27,13 @@ git clone https://github.com/farhat-lab/gentb-snakemake.git
 ```
 #change directory into the repository folder, create a directory to save the fastq files, then download sample fastq files
 cd gentb-snakemake/; mkdir data/fastq; cd data/fastq/
+
+#download one set of paired-ended fastQ files
 wget ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR187/009/ERR1873539/ERR1873539_1.fastq.gz
 wget ftp://ftp.sra.ebi.ac.uk/vol1/fastq/ERR187/009/ERR1873539/ERR1873539_2.fastq.gz
+
+#change back to main `gentb-snakemake` directory
+cd ../../
 ```
 
 2. Make sure you have the package manager [conda](https://docs.conda.io/en/latest/miniconda.html) installed to source all software and dependencies into a new environment:
