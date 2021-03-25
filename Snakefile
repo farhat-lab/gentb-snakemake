@@ -17,7 +17,7 @@ onstart:
 
 rule all:
     input:
-        expand("results/{sample}.final.predict.json", sample=SAMPLES)
+        expand("results/{sample}.prediction.json", sample=SAMPLES)
 
 rule fastp:
     input:
@@ -146,15 +146,15 @@ rule TBpredict_all:
     input:
         RF="results/{sample}.matrix.csv", PZA="results/{sample}.matrix.pyrazinamide.csv"
     output: 
-        "results/{sample}.predict.all.json"
+        "results/{sample}.json"
     shell:
         "Rscript scripts/TBpredict_combined.R {input.RF} {input.PZA}"
       
 rule enhance:
     input: 
-        matrix="results/{sample}.predict.all.json", var="results/{sample}.var"
+        matrix="results/{sample}.json", var="results/{sample}.var"
     output: 
-        "results/{sample}.final.predict.json"
+        "results/{sample}.prediction.json"
     shell: 
         "python3 scripts/varMatchUnk.py {input.var} {lineage_snp_mf} {input.matrix} -o {output}"
 
