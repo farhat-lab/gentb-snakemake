@@ -138,16 +138,14 @@ predictfunction<-function(filename1, filename2){
   important_both_predict <- mapply(c, important, important_PZA, SIMPLIFY=FALSE)
 
   ### Now here we somehow need to concatenate the two predictions???
-
-  
-  m <- list(result_both_predict, important_both_predict, oth)
+  listOfpredictions <- list(result_both_predict, important_both_predict, oth)
 
 
   ### Now here we somehow need to concatenate the two predictions???
 
   ## Save JSON file
-  file_noext <- substr(filename2, 1, nchar(filename2) - 4)
-  cat(toJSON(m, pretty = TRUE), "\n", file = paste0(file_noext, ".json"))
+  file_noext <- substr(filename2, 1, nchar(filename2) - 24)
+  cat(toJSON(listOfpredictions, pretty = TRUE), "\n", file = paste0(file_noext, ".prediction.json"))
   
   #return(h)
   #return(important)
