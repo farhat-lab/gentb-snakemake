@@ -10,7 +10,7 @@ lineage_snp_mf=config["lineage_snp_mf"]
 
 (SAMPLES,)=glob_wildcards("data/fastq/{sample}_1.fastq.gz")
 
-ruleorder: samtools_index > pilon > annotator > generate_matrix > TBpredict > enhance
+ruleorder: samtools_index > pilon > annotator > generate_matrix > TBpredict_all > enhance
 
 onstart:
     "Rscript scripts/initialise.R"
@@ -154,7 +154,7 @@ rule enhance:
     input: 
         matrix="results/{sample}.predict.all.json", var="results/{sample}.var"
     output: 
-        "results/{sample}.enhanced.predict.json"
+        "results/{sample}.final.predict.json"
     shell: 
         "python3 scripts/varMatchUnk.py {input.var} {lineage_snp_mf} {input.matrix} -o {output}"
 
