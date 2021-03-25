@@ -145,18 +145,9 @@ predictfunction<-function(filename1, filename2){
 
   ## Save JSON file
   file_noext <- substr(filename2, 1, nchar(filename2) - 24)
-  cat(toJSON(listOfpredictions, pretty = TRUE), "\n", file = paste0(file_noext, ".prediction.json"))
+  cat(toJSON(listOfpredictions, pretty = TRUE), "\n", file = paste0(file_noext, ".json"))
   
-  #return(h)
-  #return(important)
-  #return(other)
 }
 
 suppressWarnings(predictfunction(arg[1], arg[2]))
-
-
-# l <- predictfunction("matrix.csv")
-# h <- create_heatmap("matrix.json")
-# h
-# 
 
