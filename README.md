@@ -10,6 +10,10 @@ The pipeline uses well established programs to align reads to a reference strain
 
 
 
+### Note
+
+This `Snakemake` implementation of GenTB-Random Forest currently does not include the Kraken and Check Depth steps.
+
 ### Usage
 
 1. Clone this Github repository to your local machine
