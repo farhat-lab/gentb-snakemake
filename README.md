@@ -42,3 +42,5 @@ snakemake -s snakefile_test_run --use-conda
 ```
 snakemake -s snakefile_test_run -j 100 --cluster-config cluster.json --cluster "sbatch --mem {cluster.mem} -t {cluster.t} -c {cluster.c} -p {cluster.p}"
 ```
+
+Tested on CentOS Linux Version 7
