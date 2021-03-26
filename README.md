@@ -44,12 +44,12 @@ conda activate snakemake-gentb
 
 4. Start the analysis pipeline in _Snakemake_
 ```
-snakemake -s snakefile_test_run --use-conda
+snakemake
 ```
 
 5. Start the analysis pipeline in _Snakemake_ on a SLURM cluster:
 ```
-snakemake -s snakefile_test_run -j 100 --cluster-config cluster.json --cluster "sbatch --mem {cluster.mem} -t {cluster.t} -c {cluster.c} -p {cluster.p}"
+snakemake -s Snakefile -j 100 --cluster-config cluster.json --cluster "sbatch --mem {cluster.mem} -t {cluster.t} -c {cluster.c} -p {cluster.p}"
 ```
 
 Tested on CentOS Linux Version 7
