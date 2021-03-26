@@ -134,13 +134,10 @@ predictfunction<-function(filename1, filename2){
   #bind the probabilities from RF1.0 and RF2.0
   result_both_predict <- rbind(result, result_PZA)
 
-  #TRY THIS
-  important <- list(important)
-  important_PZA <- list(important_PZA)
-  
   #bind important variant lists from RF1.0 and RF2.0
-  important_both_predict <- mapply(c, important, important_PZA, SIMPLIFY=FALSE)
+  important_both_predict <- list(mapply(c, important, important_PZA, SIMPLIFY=FALSE))
 
+  
   #make a list of RF1.0 and RF2.0 probabilities and variants
   listOfpredictions <- list(result_both_predict, important_both_predict, other)
 
