@@ -126,7 +126,8 @@ predictfunction<-function(filename1, filename2){
   #write the variant used for prediction to object
   imp<-colnames(strain)[which(strain[1,]==1)]
   
-  if(length(imp) == 0) {imp <- NULL}
+  #in case no variants were detected write NA's 
+  if(length(imp) == 0) {imp <- c(NA,NA,NA,NA,NA)}
   important_strain[1:length(imp),1]<-imp
   important_PZA[[1]]<-important_strain
 
