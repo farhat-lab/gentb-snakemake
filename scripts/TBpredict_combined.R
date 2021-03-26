@@ -138,7 +138,7 @@ predictfunction<-function(filename1, filename2){
   important_both_predict <- mapply(c, important, important_PZA, SIMPLIFY=FALSE)
 
   ### Now here we somehow need to concatenate the two predictions???
-  listOfpredictions <- list(result_both_predict, important_both_predict, oth)
+  listOfpredictions <- list(result_both_predict, important_both_predict, other)
 
 
   ### Now here we somehow need to concatenate the two predictions???
