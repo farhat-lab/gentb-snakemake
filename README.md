@@ -1,4 +1,4 @@
-## GenTB FASTQ analysis pipeline
+## GenTB-RandomForest tuberculosis resistance prediction pipeline in Snakemake
 
 This repository contains the analysis pipeline used by [GenTB](https://gentb.hms.harvard.edu) to predict antibiotic resistance _M. tuberculosis_ wrapped in _[Snakemake](https://snakemake.readthedocs.io/en/stable/)_. The code for the [GenTB webiste](https://gentb.hms.harvard.edu) is described [here](https://github.com/farhat-lab/gentb-site).
 
