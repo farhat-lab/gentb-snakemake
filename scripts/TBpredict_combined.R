@@ -5,33 +5,33 @@
 ## Call as:
 ## Rscript TBpredict.R "inputfile.csv" "inputfile2.csv"
 
+#import arguments passed to Rscript
 arg <- commandArgs(trailingOnly = TRUE)
 
+#add options (for future script version)
 options <- commandArgs(trailingOnly = FALSE)
 prefix <- "--file="
+
+#source script name
 script.name <- sub(prefix, "", options[grep(prefix, options)])
 script.basename <- dirname(script.name)
 
-# Set the location of the libs to relative to this script's location
+#source Rlibray paths relative to this script's location
 libs <- file.path(script.basename, '../data/Rlib')
-
 data_dir <- file.path(script.basename, '../data/predict_rdata')
 
-
-#aa <- Sys.time()
-
+#import libraries needed for prediction
 library(foreign)
 library(jsonlite, quietly=TRUE, lib.loc=libs)
 suppressPackageStartupMessages(library("randomForest", lib.loc=libs))
 
+#start defining the predict function 
 predictfunction<-function(filename1, filename2){
   set.seed(5414)
   
-
 ##################################################################
 ########### First predict using RF1.0 to 12 drugs ################
 ##################################################################
-
 
   druglist <- c('inh','rif','emb','str','eth','kan', 'cap', 'amk', 'cip', 'levo', 'oflx', 'pas') 
   greplist <- c('inhA|katG|embB|ahpC|ini|kasA|mabA|ndh|oxyR', 'rpoB', 'emb|ini', 'rpsL|gid|rrs', 'ethA|inhA|fabG1', 'rrs|tlyA', 'tlyA|rrs|rrl', 'tlyA|rrs|rrl', 'gyr', 'gyr', 'gyr','thyA')
@@ -102,10 +102,10 @@ predictfunction<-function(filename1, filename2){
   
   
 ##################################################################
-###### Second predict using RF2.0 to Pyrazinamide drugs ##########
+###### Second predict using RF2.0 to Pyrazinamide  ###############
 ##################################################################
 
-  ### import pyrazinamide prediction matrix
+  # import pyrazinamide prediction matrix
   strain <- read.csv(filename2, header=TRUE)
 
   #prepare output for variants
@@ -116,7 +116,6 @@ predictfunction<-function(filename1, filename2){
   #prepare output for RandomForest probability
   result_PZA<-matrix(NA,nrow=1,ncol=5, dimnames=list(c(), c('strain','drug','probability of resistance','False negative percent', 'False positive percent')))
 
-
   #load RandomForest object
   load("data/predict_rdata_pyrazinamide/pza_finalpredict.RData")
 
@@ -124,30 +123,25 @@ predictfunction<-function(filename1, filename2){
   Valid <- predict(drugg.full.rf, strain, type='prob', norm.votes=TRUE, predict.all=FALSE)
   result_PZA[1,] <- c(as.vector(strain[1,1]), 'pza', round(Valid[1,1],3), '16.1', '7.6')
 
-  
   #write the variant used for prediction to object
   imp<-colnames(strain)[which(strain[1,]==1)]
   important_strain[1:length(imp),1]<-imp
   important_PZA[[1]]<-important_strain
 
-
-  #bind the prrobabilities from RF1.0 and RF2.0 together
+  #bind the probabilities from RF1.0 and RF2.0
   result_both_predict <- rbind(result, result_PZA)
 
-  #bind the important variant lists from RF1.0 and RF2.0 together
+  #bind important variant lists from RF1.0 and RF2.0
   important_both_predict <- mapply(c, important, important_PZA, SIMPLIFY=FALSE)
 
-  ### Now here we somehow need to concatenate the two predictions???
+  #make a list of RF1.0 and RF2.0 probabilities and variants
   listOfpredictions <- list(result_both_predict, important_both_predict, other)
 
-
-  ### Now here we somehow need to concatenate the two predictions???
-
-  ## Save JSON file
+  # Save JSON file
   file_noext <- substr(filename2, 1, nchar(filename2) - 24)
   cat(toJSON(listOfpredictions, pretty = TRUE), "\n", file = paste0(file_noext, ".json"))
   
 }
 
+#Call prediction function on both input arguments
 suppressWarnings(predictfunction(arg[1], arg[2]))
-
