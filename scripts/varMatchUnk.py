@@ -121,7 +121,6 @@ with open(args.json_file, "r") as f:
 drs = [
     "INH",
     "RIF",
-    "PZA",
     "EMB",
     "STR",
     "ETH",
@@ -132,22 +131,75 @@ drs = [
     "LEVO",
     "OFLX",
     "PAS",
+    "PZA",
 ]
 
 imp = {}
 oth = {}
 
-#import sys
+### 1. Read important variants ###
 
-j = 0
+# obtain list of variants from the TBpredict_combined.R script
+listOfVarInfo = [x for x in datastore[1][0].values()][0]
+
+# set the drug counter to 0
+drug_counter = 0
+
+# start loop over 13 drugs
 for d in drs:
+    
+    #initialize the list/dict
     imp[d] = []
-    oth[d] = []
+    
+    #loop over important variants, i.e., five per drug
     for i in range(0, 5):
-        imp[d].append(next(iter(datastore[1].values()))[i][j])
-        oth[d].append(next(iter(datastore[2].values()))[i][j])
-    j = j + 1
+        
+        #connect variant - drug 
+        index = drug_counter*5 + i
+        
+        #append the dictionary by drug and important variant
+        imp[d].append(listOfVarInfo[index])
+        
+    # add 1 to drug counter    
+    drug_counter += 1
 
+    
+### 2. Read other variants ###
+
+# set drug counter to 0
+drug_counter = 0
+
+# start loop over 12 drugs
+for d in drs[:-1]:
+    
+    #initialize the list/dict
+    oth[d] = []
+    
+    #loop over other variants
+    for i in range(0, 5):
+        
+        #append the dictionary by drug and other variants
+        oth[d].append(next(iter(datastore[2].values()))[i][drug_counter])
+    
+    #add 1 to drug counter
+    drug_counter += 1
+    
+# add None to other variant dict for PZA
+oth['PZA'] = [None,None,None,None,None]
+
+### 3. Change dictionary layout to original (RandomForest1.0) structure to ensure equal output json ###
+
+# initiate a new dictionary and list
+dict_layout_RF1 = {}
+listOflists = []
+
+# take ith element of the 'important' dictionary and print it into an individual list
+for i in range(0,5):
+    list_i = [item[i] for item in list(imp.values())]
+    listOflists.append(list_i)
+
+# fill dictionary with isolate ID as key and the five lists as values
+dict_layout_RF1 = {list(datastore[1][0].keys())[0] : listOflists}
 
 imp_variants_identified = []
 oth_variants_identified = []
@@ -621,7 +673,7 @@ else:
 
 for i in range(0, 5):
         j = -1
-        for d in range(0, len(drs)):
+        for d in range(0, len(drs[:-1])):
             j = j + 1
             if len(moth[drs[d]][i:]) > 0:
                 next(iter(other.values()))[i][j] = moth[drs[d]][i]
@@ -633,6 +685,8 @@ def append_results(in_name, out_name, *results):
     with open(in_name, "r") as infile:
         structure = json.loads(infile.read())
         structure.pop()
+        # replace important variant dictionary with RandomForest1 layout for consistency
+        structure[1] = dict_layout_RF1
         structure.extend(results)
 
     with open((out_name or in_name), "w") as outfile:
