@@ -30,11 +30,11 @@ predictfunction<-function(filename1, filename2){
   set.seed(5414)
   
 ##################################################################
-########### First predict using RF1.0 to 12 drugs ################
+########### First predict using RF1.0 to 13 drugs ################
 ##################################################################
 
-  druglist <- c('inh','rif','emb','str','eth','kan', 'cap', 'amk', 'cip', 'levo', 'oflx', 'pas') 
-  greplist <- c('inhA|katG|embB|ahpC|ini|kasA|mabA|ndh|oxyR', 'rpoB', 'emb|ini', 'rpsL|gid|rrs', 'ethA|inhA|fabG1', 'rrs|tlyA', 'tlyA|rrs|rrl', 'tlyA|rrs|rrl', 'gyr', 'gyr', 'gyr','thyA')
+  druglist <- c('inh','rif','pza','emb','str','eth','kan', 'cap', 'amk', 'cip', 'levo', 'oflx', 'pas') 
+  greplist <- c('inhA|katG|embB|ahpC|ini|kasA|mabA|ndh|oxyR', 'rpoB','pncA', 'emb|ini', 'rpsL|gid|rrs', 'ethA|inhA|fabG1', 'rrs|tlyA', 'tlyA|rrs|rrl', 'tlyA|rrs|rrl', 'gyr', 'gyr', 'gyr','thyA')
   
   input <- read.csv(filename1, header=TRUE)
   result<-matrix(NA,nrow=1,ncol=5, dimnames=list(c(), c('strain','drug','probability of resistance','False negative percent', 'False positive percent')))
@@ -42,7 +42,7 @@ predictfunction<-function(filename1, filename2){
   names(important)<-input[,1]
   other<-vector("list",nrow(input))
   names(other)<-input[,1]
-  distmatrix<-matrix(NA,nrow=1,ncol=12,dimnames=list(c(), druglist))
+  distmatrix<-matrix(NA,nrow=1,ncol=13,dimnames=list(c(), druglist))
   
   for ( j in 1:nrow(input)){
     strain <- input[j,]
@@ -131,20 +131,18 @@ predictfunction<-function(filename1, filename2){
   important_strain[1:length(imp),1]<-imp
   important_PZA[[1]]<-important_strain
 
-  #bind the probabilities from RF1.0 and RF2.0
-  result_both_predict <- rbind(result, result_PZA)
-
-  #bind important variant lists from RF1.0 and RF2.0
-  important_both_predict <- list(mapply(c, important, important_PZA, SIMPLIFY=FALSE))
-
   
-  #make a list of RF1.0 and RF2.0 probabilities and variants
-  listOfpredictions <- list(result_both_predict, important_both_predict, other)
 
-  # Save JSON file
-  file_noext <- substr(filename2, 1, nchar(filename2) - 24)
-  cat(toJSON(listOfpredictions, pretty = TRUE), "\n", file = paste0(file_noext, ".json"))
-  
+
+l <- list(result, important, other)
+file_noext <- substr(filename1, 1, nchar(filename1) - 4)
+
+cat(toJSON(l, pretty = TRUE), "\n", file = paste0(file_noext, ".json")) 
+
+
+m <- list(result_PZA, important_PZA)
+
+cat(toJSON(m, pretty = TRUE), "\n", file = paste0(file_noext, ".PZA.json")) 
 }
 
 #Call prediction function on both input arguments
