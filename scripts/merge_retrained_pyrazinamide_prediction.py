@@ -29,14 +29,17 @@ with open(args.final_json_file, "r") as f:
 with open(args.pza_json_file, "r") as f:
     pza_json_data = json.load(f)
 
-
-#define the probability value from the pza JSON output
-pza_probability = pza_json_data[0][0][2]
-
 #write PZA probability to final JSON file and remove values for FP and FN rate (not computed with the new PZA random Forest)
-final_json_data[0][2][2] = pza_probability
-final_json_data[0][2][3] = ''
-final_json_data[0][2][4] = ''
+final_json_data[0][2][2] = pza_json_data[0][0][2]
+final_json_data[0][2][3] = '0.161'
+final_json_data[0][2][4] = '0.076'
+
+# write the important pncA variants into the final JSON
+list(final_json_data[1].items())[0][1][0][2] = list(pza_json_data[1].items())[0][1][0][0]
+list(final_json_data[1].items())[0][1][1][2] = list(pza_json_data[1].items())[0][1][1][0]
+list(final_json_data[1].items())[0][1][2][2] = list(pza_json_data[1].items())[0][1][2][0]
+list(final_json_data[1].items())[0][1][3][2] = list(pza_json_data[1].items())[0][1][3][0]
+list(final_json_data[1].items())[0][1][4][2] = list(pza_json_data[1].items())[0][1][4][0]
 
 
 #write merged output into a final merged json file in the same format
