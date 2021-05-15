@@ -133,13 +133,13 @@ predictfunction<-function(filename1, filename2){
 
   
 
-
+# write first prediction to JSON
 l <- list(result, important, other)
 file_noext <- substr(filename1, 1, nchar(filename1) - 4)
 
 cat(toJSON(l, pretty = TRUE), "\n", file = paste0(file_noext, ".json")) 
 
-
+# write prediction using retrained PZA model to JSON
 m <- list(result_PZA, important_PZA)
 
 cat(toJSON(m, pretty = TRUE), "\n", file = paste0(file_noext, ".PZA.json")) 
