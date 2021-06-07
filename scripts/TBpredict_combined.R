@@ -123,7 +123,7 @@ predictfunction<-function(filename1, filename2){
   result_PZA<-matrix(NA,nrow=1,ncol=6, dimnames=list(c(), c('strain','drug','binary resistance', 'False negative percent', 'False positive percent', 'probability of resistance')))
 
   #load RandomForest object
-  load("../data/predict_rdata/pza_finalpredict_v2_0.RData")
+  load("data/predict_rdata/pza_finalpredict_v2_0.RData")
 
   #perform prediction and write strain ID, drug, and probability to result
   Valid <- predict(drugg.full.rf, strain, type='prob', norm.votes=TRUE, predict.all=FALSE)
