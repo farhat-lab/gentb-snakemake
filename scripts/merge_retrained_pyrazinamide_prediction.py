@@ -31,6 +31,7 @@ with open(args.pza_json_file, "r") as f:
 
 #write PZA probability to final JSON file and remove values for FP and FN rate (not computed with the new PZA random Forest)
 final_json_data[0][2][2] = pza_json_data[0][0][2]
+final_json_data[0][2][5] = pza_json_data[0][0][5]
 final_json_data[0][2][3] = '0.161'
 final_json_data[0][2][4] = '0.076'
 
