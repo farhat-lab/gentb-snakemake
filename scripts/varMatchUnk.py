@@ -22,7 +22,7 @@ parser.add_argument(
     help="file that contains R prediction and list of important and other mutations",
 )
 parser.add_argument(
-    "--out_file", "-o", default=None,
+    "-o", default=None,
     help="Output filename for the new json (overwrites if not specified)",
 )
 
@@ -121,6 +121,7 @@ with open(args.json_file, "r") as f:
 drs = [
     "INH",
     "RIF",
+    "PZA",
     "EMB",
     "STR",
     "ETH",
@@ -131,75 +132,22 @@ drs = [
     "LEVO",
     "OFLX",
     "PAS",
-    "PZA",
 ]
 
 imp = {}
 oth = {}
 
-### 1. Read important variants ###
+#import sys
 
-# obtain list of variants from the TBpredict_combined.R script
-listOfVarInfo = [x for x in datastore[1][0].values()][0]
-
-# set the drug counter to 0
-drug_counter = 0
-
-# start loop over 13 drugs
+j = 0
 for d in drs:
-    
-    #initialize the list/dict
     imp[d] = []
-    
-    #loop over important variants, i.e., five per drug
-    for i in range(0, 5):
-        
-        #connect variant - drug 
-        index = drug_counter*5 + i
-        
-        #append the dictionary by drug and important variant
-        imp[d].append(listOfVarInfo[index])
-        
-    # add 1 to drug counter    
-    drug_counter += 1
-
-    
-### 2. Read other variants ###
-
-# set drug counter to 0
-drug_counter = 0
-
-# start loop over 12 drugs
-for d in drs[:-1]:
-    
-    #initialize the list/dict
     oth[d] = []
-    
-    #loop over other variants
     for i in range(0, 5):
-        
-        #append the dictionary by drug and other variants
-        oth[d].append(next(iter(datastore[2].values()))[i][drug_counter])
-    
-    #add 1 to drug counter
-    drug_counter += 1
-    
-# add None to other variant dict for PZA
-oth['PZA'] = [None,None,None,None,None]
+        imp[d].append(datastore[1][datastore[1].keys()[0]][i][j])
+        oth[d].append(datastore[2][datastore[2].keys()[0]][i][j])
+    j = j + 1
 
-### 3. Change dictionary layout to original (RandomForest1.0) structure to ensure equal output json ###
-
-# initiate a new dictionary and list
-dict_layout_RF1 = {}
-listOflists = []
-
-# take ith element of the 'important' dictionary and print it into an individual list
-for i in range(0,5):
-    list_i = [item[i] for item in list(imp.values())]
-    listOflists.append(list_i)
-
-# fill dictionary with isolate ID as key and the five lists as values
-dict_layout_RF1 = {list(datastore[1][0].keys())[0] : listOflists}
 
 imp_variants_identified = []
 oth_variants_identified = []
@@ -396,7 +344,7 @@ for d in drs:
                     if type_change_info[5] == "gyrB":
                         gene_name = "promoter-gyrB-gyrA"
             elif type_change_info[0] in ["INS", "DEL"] and type_change_info[1] == "CF":
-                gene_name, codon_position = type_change_info[5], type_change_info[4]
+                       gene_name, codon_position = type_change_info[5], type_change_info[4]
                 codonAA = type_change_info[3]
                 m = re.search(r"[ACGT]+", codonAA)
                 if m:
@@ -408,7 +356,7 @@ for d in drs:
                 "CD",
                 "CI",
             ]:
-                gene_name, codon_position = type_change_info[5], type_change_info[4]
+                      gene_name, codon_position = type_change_info[5], type_change_info[4]
                 codonAA = type_change_info[3]
                 m = re.search(r"[ACGT]+", codonAA)
                 if m:
@@ -434,7 +382,7 @@ for d in drs:
                     m = re.search(r"(\d+)([ACGT]+)", codonAA)
                     if m:
                         codon_position = m.group(1)
-                        indel_seq = m.group(2)
+                               indel_seq = m.group(2)
                     type_change = codonAA[0] + indel_seq.replace("\n", "")
             test = Variant(gene_name, codon_position, type_change)
             oth_variants_identified.append(test)
@@ -673,20 +621,18 @@ else:
 
 for i in range(0, 5):
         j = -1
-        for d in range(0, len(drs[:-1])):
+        for d in range(0, len(drs)):
             j = j + 1
             if len(moth[drs[d]][i:]) > 0:
-                next(iter(other.values()))[i][j] = moth[drs[d]][i]
+                    other.items()[0][1][i][j] = moth[drs[d]][i]
             else:
-                next(iter(other.values()))[i][j] = None
+                    other.items()[0][1][i][j] = None
 
 def append_results(in_name, out_name, *results):
     """Write the resulting structures to the output filename"""
     with open(in_name, "r") as infile:
         structure = json.loads(infile.read())
         structure.pop()
-        # replace important variant dictionary with RandomForest1 layout for consistency
-        structure[1] = dict_layout_RF1
         structure.extend(results)
 
     with open((out_name or in_name), "w") as outfile:
@@ -694,4 +640,4 @@ def append_results(in_name, out_name, *results):
 
 
 if __name__ == '__main__':
-    append_results(args.json_file, args.out_file, other, results1, results2)
+    append_results(args.json_file, args.json_file, other, results1, results2)
