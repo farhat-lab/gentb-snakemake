@@ -125,44 +125,30 @@ rule generate_matrix_pyrazinamide:
         "results/{sample}.matrix.pyrazinamide.csv"
     shell:
         "python3 scripts/generate_matrix_pyrazinamide.py {variant_name_list_pyrazinamide} {input} > {output}"
-
-# rule TBpredict:
-#     input:
-#         "results/{sample}.matrix.csv"
-#     output: 
-#         "results/{sample}.predict.json"
-#     shell:
-#         "Rscript scripts/TBpredict.R {input}"
-
-# rule TBpredict_pyrazinamide:
-#     input:
-#         "results/{sample}.matrix.pyrazinamide.csv"
-#     output: 
-#         "results/{sample}.predict.pyrazinamide.json"
-#     shell:
-#         "Rscript scripts/TBpredict_pyrazinamide.R {input}"
         
 rule TBpredict_all:
     input:
         RF="results/{sample}.matrix.csv", PZA="results/{sample}.matrix.pyrazinamide.csv"
     output: 
-        "results/{sample}.json"
+        RF="results/{sample}.matrix.json", PZA="results/{sample}.matrix.pza.json"
     shell:
-        "Rscript scripts/TBpredict_combined.R {input.RF} {input.PZA}"
-      
+        "Rscript scripts/TBpredict_combined.R {input.RF} {input.PZA} && ls {output.RF} {output.PZA}"
+ 
+rule merge_pyrazinamide_prediction:
+    input:
+        all_predictions="results/{sample}.matrix.json",
+        pza_prediction="results/{sample}.matrix.pza.json",
+    output:
+        "results/{sample}.predict.json"
+    shell:
+        "python3 scripts/merge_retrained_pyrazinamide_prediction.py {input.all_predictions} {input.pza_prediction} {output}" 
+
 rule enhance:
     input: 
-        matrix="results/{sample}.json", var="results/{sample}.var"
+        matrix="results/{sample}.predict.json", var="results/{sample}.var"
     output: 
-        "results/{sample}.prediction.json"
+        "results/{sample}.final.predict.json"
     shell: 
         "python3 scripts/varMatchUnk.py {input.var} {lineage_snp_mf} {input.matrix} -o {output}"
 
-# rule merge_pyrazinamide_prediction:
-#     input:
-#         all_predictions="results/{sample}.enhanced.predict.json",
-#         pza_prediction="results/{sample}.predict.pyrazinamide.json",
-#     output:
-#         "results/{sample}.final.predict.json"
-#     shell:
-#         "python3 scripts/merge_retrained_pyrazinamide_prediction.py {input.all_predictions} {input.pza_prediction} {output}" 
+
