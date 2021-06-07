@@ -17,7 +17,7 @@ onstart:
 
 rule all:
     input:
-        expand("results/{sample}.prediction.json", sample=SAMPLES)
+        expand("results/{sample}.final.predict.json", sample=SAMPLES)
 
 rule fastp:
     input:
