@@ -344,7 +344,7 @@ for d in drs:
                     if type_change_info[5] == "gyrB":
                         gene_name = "promoter-gyrB-gyrA"
             elif type_change_info[0] in ["INS", "DEL"] and type_change_info[1] == "CF":
-                       gene_name, codon_position = type_change_info[5], type_change_info[4]
+                gene_name, codon_position = type_change_info[5], type_change_info[4]
                 codonAA = type_change_info[3]
                 m = re.search(r"[ACGT]+", codonAA)
                 if m:
