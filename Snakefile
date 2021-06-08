@@ -10,14 +10,14 @@ lineage_snp_mf=config["lineage_snp_mf"]
 
 (SAMPLES,)=glob_wildcards("data/fastq/{sample}_1.fastq.gz")
 
-ruleorder: samtools_index > pilon > annotator > generate_matrix > TBpredict_all > enhance
+ruleorder: samtools_index > pilon > annotator > generate_matrix > TBpredict_all
 
 onstart:
     "Rscript scripts/initialise.R"
 
 rule all:
     input:
-        expand("results/{sample}.final.predict.json", sample=SAMPLES)
+        expand("results/{sample}.predict.json", sample=SAMPLES)
 
 rule fastp:
     input:
@@ -134,21 +134,13 @@ rule TBpredict_all:
     shell:
         "Rscript scripts/TBpredict_combined.R {input.RF} {input.PZA} && ls {output.RF} {output.PZA}"
  
-rule merge_pyrazinamide_prediction:
+rule merge_enhance_prediction:
     input:
         all_predictions="results/{sample}.matrix.json",
         pza_prediction="results/{sample}.matrix.pza.json",
+        var="results/{sample}.var"
     output:
         "results/{sample}.predict.json"
     shell:
-        "python3 scripts/merge_retrained_pyrazinamide_prediction.py {input.all_predictions} {input.pza_prediction} {output}" 
-
-rule enhance:
-    input: 
-        matrix="results/{sample}.predict.json", var="results/{sample}.var"
-    output: 
-        "results/{sample}.final.predict.json"
-    shell: 
-        "python3 scripts/varMatchUnk.py {input.var} {lineage_snp_mf} {input.matrix} -o {output}"
-
+        "python3 scripts/merge_retrained_pyrazinamide_prediction.py {input.all_predictions} {input.pza_prediction} {output} && python2 scripts/varMatchUnk.py {input.var} {lineage_snp_mf} {output}" 
 
