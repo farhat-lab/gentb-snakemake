@@ -352,11 +352,8 @@ for d in drs:
                 type_change = (
                     codonAA[0] + type_change_info[1][1] + indel_seq.replace("\n", "")
                 )  # e.g dFG or iFGA
-            elif type_change_info[0] in ["INS", "DEL"] and type_change_info[1] in [
-                "CD",
-                "CI",
-            ]:
-                      gene_name, codon_position = type_change_info[5], type_change_info[4]
+            elif type_change_info[0] in ["INS", "DEL"] and type_change_info[1] in ["CD","CI"]:
+                gene_name, codon_position = type_change_info[5], type_change_info[4]
                 codonAA = type_change_info[3]
                 m = re.search(r"[ACGT]+", codonAA)
                 if m:
