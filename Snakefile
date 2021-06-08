@@ -132,7 +132,8 @@ rule TBpredict_all:
     output: 
         RF="results/{sample}.matrix.json", PZA="results/{sample}.matrix.pza.json"
     shell:
-        "Rscript scripts/TBpredict_combined.R {input.RF} {input.PZA} && ls {output.RF} {output.PZA}"
+        "Rscript scripts/TBpredict_combined.R {input.RF} {input.PZA} && "
+        "ls {output.RF} {output.PZA}"
  
 rule merge_enhance_prediction:
     input:
@@ -142,5 +143,6 @@ rule merge_enhance_prediction:
     output:
         "results/{sample}.predict.json"
     shell:
-        "python3 scripts/merge_retrained_pyrazinamide_prediction.py {input.all_predictions} {input.pza_prediction} {output} && python2 scripts/varMatchUnk.py {input.var} {lineage_snp_mf} {output}" 
+        "python3 scripts/merge_retrained_pyrazinamide_prediction.py {input.all_predictions} {input.pza_prediction} {output} && "
+        "python2 scripts/varMatchUnk.py {input.var} {lineage_snp_mf} {output}" 
 
