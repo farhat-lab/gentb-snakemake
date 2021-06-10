@@ -63,8 +63,8 @@ A list of drug-lists where each drug-list has the following items:
 ["<sampleID>", 
  "<drug>", 
  "<binary resistance (1/0)>", 
- "<False Negative Rate>", 
  "<False Positive Rate>", 
+ "<False Negative Rate>", 
  "<probability of resistance>"]
  ```
  
