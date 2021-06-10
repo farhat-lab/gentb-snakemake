@@ -163,8 +163,9 @@ For the example of `ERR1873539`, this part of the output would look as follows:
  ]
 ]
 
+```
 
 3. Last, another list of five list follows with other or novel variants that were not seen durinig training the Random Forest model but occurred in known resistance genes. 
 
 
-Tested on CentOS Linux Version 7
+*Tested on CentOS Linux Version 7*
