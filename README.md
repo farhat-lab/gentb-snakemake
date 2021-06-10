@@ -78,11 +78,11 @@ A list of drug-lists where each drug-list has the following items:
   "0.998"]
   ```
   
-  2. *Important drug resistance mutations*
+  2. Important drug resistance mutations
   
-  Next, a list of five lists of important drug resistance mutations (defined [here](https://www.atsjournals.org/doi/full/10.1164/rccm.201510-2091OC)). The items per list are ordered the same like the resistance probability lists above. 
+Next, a list of five lists of important drug resistance mutations (defined [here](https://www.atsjournals.org/doi/full/10.1164/rccm.201510-2091OC)). The items per list are ordered the same like the resistance probability lists above. 
   
-  For the example of `ERR1873539`, this part of the output would look as follows:
+For the example of `ERR1873539`, this part of the output would look as follows:
   
   ```
 "ERR1873539": [
@@ -160,8 +160,11 @@ A list of drug-lists where each drug-list has the following items:
   null, 
   null, 
   null
+ ]
 ]
-]```
+
 
 3. Last, another list of five list follows with other or novel variants that were not seen durinig training the Random Forest model but occurred in known resistance genes. 
+
+
 Tested on CentOS Linux Version 7
