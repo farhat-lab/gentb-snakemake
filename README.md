@@ -4,7 +4,7 @@ This repository contains the analysis pipeline used by [GenTB](https://gentb.hms
 
 ### Overview
 
-The pipeline uses well established programs to align reads to a reference strain and call variants. Raw sequence reads, in the form of a fastq file, are aligned to H37Rv reference strain using minimap2. Samtools is employed for sorting of the alignment file and removal of duplicate reads. Variants are called with Pilon. The variants are then annotated and filtered using custom scripts and fed to two multivariate prediction models ([GenTB-Random Forest](https://github.com/mgro/mgro.github.io/blob/master/GenTB%20Pipeline.png) and [GenTB Wide and Deep Neural Network](https://www.sciencedirect.com/science/article/pii/S2352396419302506?via%3Dihub)). 
+The pipeline uses well established programs to align reads to a reference strain and call variants. Raw sequence reads, in the form of a fastq file, are aligned to H37Rv reference strain using minimap2. Samtools is employed for sorting of the alignment file and removal of duplicate reads. Variants are called with Pilon. The variants are then annotated and filtered using custom scripts and fed to two multivariate prediction models ([GenTB-Random Forest](https://www.atsjournals.org/doi/full/10.1164/rccm.201510-2091OC) and [GenTB Wide and Deep Neural Network](https://www.sciencedirect.com/science/article/pii/S2352396419302506?via%3Dihub)). 
 
 <img src="https://github.com/mgro/mgro.github.io/blob/master/GenTB%20Pipeline.png" width="700" height="700" />
 
