@@ -34,7 +34,7 @@ predictfunction<-function(filename1, filename2){
 ##################################################################
 
   druglist <- c('inh','rif','pza','emb','str','eth','kan', 'cap', 'amk', 'cip', 'levo', 'oflx', 'pas')
-  thresholds <- c(0.22, 0.002, 0.001, 0.084, 0.047, 0.32, 0.63, 0.25, 0.6, 0.42, 0.41, 0.33, 0.001)
+  thresholds <- c(0.22, 0.002, 0.013, 0.084, 0.047, 0.32, 0.63, 0.25, 0.6, 0.42, 0.41, 0.33, 0.001)
   greplist <- c('inhA|katG|embB|ahpC|ini|kasA|mabA|ndh|oxyR', 'rpoB','pncA', 'emb|ini', 'rpsL|gid|rrs', 'ethA|inhA|fabG1', 'rrs|tlyA', 'tlyA|rrs|rrl', 'tlyA|rrs|rrl', 'gyr', 'gyr', 'gyr','thyA')
   
   input <- read.csv(filename1, header=TRUE)
