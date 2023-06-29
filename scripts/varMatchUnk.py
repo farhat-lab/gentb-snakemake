@@ -379,7 +379,7 @@ for d in drs:
                     m = re.search(r"(\d+)([ACGT]+)", codonAA)
                     if m:
                         codon_position = m.group(1)
-                               indel_seq = m.group(2)
+                        indel_seq = m.group(2)
                     type_change = codonAA[0] + indel_seq.replace("\n", "")
             test = Variant(gene_name, codon_position, type_change)
             oth_variants_identified.append(test)
